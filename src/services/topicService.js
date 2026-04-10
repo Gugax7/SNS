@@ -1,7 +1,7 @@
 const topicsDb = require("../models/Topic.js");
 const { generateTopicArn } = require("../utils/arn.js");
 
-const createTopic = (name, attributes = {}) => {
+const createTopic = (name, attributes = {}, subscribersMap = new Map()) => {
   if(!name){
     throw new Error("Name of topic is mandatory")
   }
@@ -13,6 +13,7 @@ const createTopic = (name, attributes = {}) => {
     name,
     attributes,
     createdAt: new Date().toISOString(),
+    subscribersMap
   }
 
   topicsDb.set(topicArn, newTopic);

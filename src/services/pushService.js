@@ -1,8 +1,15 @@
 const axios = require('axios');
 
+const subscriberDb = require("../models/Subscriber");
+
 const sendNotification = async (eventData) => {
 
-  const clientUrl = 'http://localhost:3001/webhook';
+  const clientUrls = [
+    'http://localhost:3002/webhook',
+    'http://localhost:3001/webhook',
+    'http://localhost:3003/webhook',
+    'http://dont.exist/mustFail',
+  ];
   const payload = {
     event: 'New Subscription',
     timestamp: new Date().toISOString(),
@@ -10,11 +17,21 @@ const sendNotification = async (eventData) => {
   }
 
   try{
-    console.log('Sending new notification for ', clientUrl);
+    console.log('Sending new notification for ', clientUrls.length, ' clients');
 
-    const response = await axios.post(clientUrl, payload);
+    const sends = clientUrls.map((url) => {
+      return axios.post(url, payload)
+        .then((response) => {
+          console.log(`Success -> ${url} (Status: ${response.status}`)
+        })
+        .catch((err) => {
+          console.log(`Fail! -> ${url} (${err.message})`)
+        })
+    })
 
-    console.log("Notification sent! Client answered with status: ", response.status);
+    await Promise.all(sends);
+
+    console.log("====Notification processing finished!====");
   }catch(err){
     console.log("Fail to deliver notification: ", err.message);
   }
