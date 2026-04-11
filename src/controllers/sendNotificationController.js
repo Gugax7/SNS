@@ -3,9 +3,11 @@ const notificationService = require('../services/pushService');
 const sendNotification = (req, res) => {
   const data = req.body;
 
-  notificationService.sendNotification(data);
+  notificationService.sendNotification(data).catch((err) => {
+    console.log("background error to not compromise performance: ", err.message)
+  });
+  res.status(202).json("Notifications triggered!")
 
-  res.status(200).json("Notification sent!")
 }
 
 module.exports = {

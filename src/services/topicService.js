@@ -22,7 +22,14 @@ const createTopic = (name, attributes = {}, subscribersMap = new Map()) => {
 }
 
 const listTopics = () => {
-  const topicsArray = [...topicsDb.values()];
+  const rawTopics = [...topicsDb.values()];
+
+  const topicsArray = rawTopics.map(topic => {
+    return {
+      ...topic,
+      subscribersMap: Object.fromEntries(topic.subscribersMap) 
+    };
+  });
 
   return topicsArray;
 }

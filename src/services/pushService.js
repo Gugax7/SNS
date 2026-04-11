@@ -1,31 +1,34 @@
 const axios = require('axios');
 
-const subscriberDb = require("../models/Subscriber");
+const topicsDb = require("../models/Subscriber");
 
 const sendNotification = async (eventData) => {
 
-  const clientUrls = [
-    'http://localhost:3002/webhook',
-    'http://localhost:3001/webhook',
-    'http://localhost:3003/webhook',
-    'http://dont.exist/mustFail',
-  ];
+  console.log("eventData", eventData)
+
+  const topic = topicsDb.get(eventData.topicArn);
+
+  if(!topic){
+    throw new Error("Error finding mentioned topic");
+  }
+  const subscribersUrls = Array.from(topic.subscribersMap.keys());
+
   const payload = {
-    event: 'New Subscription',
+    event: 'New Notification',
     timestamp: new Date().toISOString(),
     data: eventData
   }
 
   try{
-    console.log('Sending new notification for ', clientUrls.length, ' clients');
+    console.log('Sending new notification for ', subscribers.size, ' clients');
 
-    const sends = clientUrls.map((url) => {
+    const sends = subscribersUrls.map((url) => {
       return axios.post(url, payload)
         .then((response) => {
           console.log(`Success -> ${url} (Status: ${response.status}`)
         })
         .catch((err) => {
-          console.log(`Fail! -> ${url} (${err.message})`)
+          console.log(`Cant reach user:  ->  ${url} (${err.message})`)
         })
     })
 
