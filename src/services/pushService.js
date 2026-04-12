@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const topicsDb = require("../models/Subscriber");
+const topicsDb = require("../models/Topic");
 
 const sendNotification = async (eventData) => {
 
@@ -20,7 +20,7 @@ const sendNotification = async (eventData) => {
   }
 
   try{
-    console.log('Sending new notification for ', subscribers.size, ' clients');
+    console.log('Sending new notification for ', subscribersUrls.size, ' clients');
 
     const sends = subscribersUrls.map((url) => {
       return axios.post(url, payload)
