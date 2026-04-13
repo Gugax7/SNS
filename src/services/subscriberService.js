@@ -11,7 +11,10 @@ const subscribe = (topicArn, clientInfo) => {
     throw new Error("Client Url is mandatory to subscribe");
   }
 
-  topic.subscribersMap.set(clientInfo.url, clientInfo.username);
+  topic.subscribersMap.set(clientInfo.url, {
+    username: clientInfo.username,
+    filterPolicy: clientInfo.filterPolicy
+  });
 
   console.log(
     `✅ ${clientInfo.username || "User"} subscribed successfully on: ${topic.name}`,

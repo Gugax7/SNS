@@ -3,6 +3,8 @@ const app = express();
 
 app.use(express.json());
 
+const PORT = process.argv[2];
+
 app.post("/webhook", (req, res) => {
   const payload = req.body;
 
@@ -14,6 +16,6 @@ app.post("/webhook", (req, res) => {
 })
 
 
-app.listen(3001, () => {
-  console.log('🚀 Cliente ouvindo notificações em http://localhost:3001/webhook')
+app.listen(PORT, () => {
+  console.log(`🚀 Cliente ouvindo notificações em http://localhost:${PORT}/webhook`)
 })
