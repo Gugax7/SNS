@@ -45,6 +45,14 @@ const sendNotification = async (eventData) => {
   }
 }
 
+// TODO: 
+// Create fix mocks to test all of it. (4 users)
+// Exact matching
+// Anything-but matching
+// Numeric matching (greater than, less than, between)
+// Prefix matching
+// Apply filters before deliver messages
+
 const isMatch = (messageAttributes = {}, userFilterPolicy = {}) => {
   const policyKeys = Object.keys(userFilterPolicy);
 
