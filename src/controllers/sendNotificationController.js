@@ -1,4 +1,4 @@
-const notificationService = require('../services/pushService');
+const notificationService = require('../services/publishService');
 
 const sendNotification = (req, res) => {
   const data = req.body;

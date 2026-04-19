@@ -41,7 +41,7 @@ Implementar Subscriptions Básicas (60min)
 
 [ ] Implementar serviço listSubscriptions(topicArn)
 
-[ ] Suportar protocolos: http, https, console (para debug)
+[x] Suportar protocolos: http, https, console (para debug)
 
 Entregável: API REST básica com CRUD de Topics e Subscriptions
 
@@ -62,11 +62,11 @@ Subscription Filters (60min)
 
 [x] Validador de filtros: Exact matching
 
-[ ] Validador de filtros: Anything-but matching
+[x] Validador de filtros: Anything-but matching
 
-[ ] Validador de filtros: Numeric matching (greater than, less than, between)
+[x] Validador de filtros: Numeric matching (greater than, less than, between)
 
-[ ] Validador de filtros: Prefix matching
+[x] Validador de filtros: Prefix matching
 
 [x] Aplicar filtros antes de entregar mensagens
 
@@ -83,9 +83,9 @@ Entregável: Sistema completo de publish/subscribe com filtros funcionando
 Sessão 3 (2h30min) | Objetivo: Refinamento e funcionalidades avançadas
 
 Dead Letter Queue (DLQ) Simulado (45min)
-[ ] Implementar armazenamento de mensagens com falha
+[x] Implementar armazenamento de mensagens com falha
 
-[ ] Criar Endpoint para consultar DLQ
+[x] Criar Endpoint para consultar DLQ
 
 [ ] Configurar max retries por subscription
 
@@ -95,6 +95,11 @@ Message Attributes e Deduplication (45min)
 [ ] Implementar deduplicação básica (MessageDeduplicationId)
 
 [ ] Adicionar MessageGroupId para FIFO (simulado)
+
+
+
+
+
 
 Testes e Cenários Práticos (60min)
 [ ] Criar cenário: Múltiplos subscribers no mesmo topic
