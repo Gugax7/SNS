@@ -27,31 +27,40 @@ const subscribe = (topicArn, clientInfo) => {
   };
 };
 
-const unsubscribe = (topicArn, clientInfo) => {
+const unsubscribe = (topicArn, endpoint) => {
   const topic = topicsDb.get(topicArn);
 
   if (!topic) {
     throw new Error("there is no topic with this arn");
   }
 
-  if (!clientInfo || !clientInfo.url) {
+  if (!endpoint) {
     throw new Error("Client Url is mandatory to unsubscribe");
   }
 
-  topic.subscribersMap.delete(clientInfo.url);
+  topic.subscribersMap.delete(endpoint);
 
   console.log(
-    `✅ ${clientInfo.username || "User"} Unsubscribed successfully of: ${topic.name}`,
+    `✅user with endpoint ${endpoint} Unsubscribed successfully of: ${topic.name}`,
   );
 
   return {
     status: "success",
     topicArn: topic.topicArn,
-    subscribedUrl: clientInfo.url,
+    subscribedUrl: endpoint,
   };
 };
+
+const listSubscriptionsOfTopic = (topicArn) => {
+  const topic = topicsDb.get(topicArn);
+
+  if(!topic) return {};
+
+  return Object.fromEntries(topic.subscribersMap);
+}
 
 module.exports = {
   subscribe,
   unsubscribe,
+  listSubscriptionsOfTopic
 };

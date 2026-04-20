@@ -37,9 +37,9 @@ Implementar Subscriptions Básicas (60min)
 
 [x] Implementar serviço subscribe(topicArn, clientInfo)
 
-[ ] Implementar serviço unsubscribe(topicArn, clientUrl)
+[x] Implementar serviço unsubscribe(topicArn, clientUrl)
 
-[ ] Implementar serviço listSubscriptions(topicArn)
+[x] Implementar serviço listSubscriptions(topicArn)
 
 [x] Suportar protocolos: http, https, console (para debug)
 
