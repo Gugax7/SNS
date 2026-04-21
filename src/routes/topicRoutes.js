@@ -9,4 +9,4 @@ router.get('/:arn/attributes', topicController.getAttributes);
 
 router.delete('/:arn', topicController.remove);
 
-module.exports = router
+module.exports = router;

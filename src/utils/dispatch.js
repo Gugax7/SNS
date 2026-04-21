@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 function dispatchMessage(endpoint, protocol, payload){
   switch(protocol) {
     case 'http':

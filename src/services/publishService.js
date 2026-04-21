@@ -103,6 +103,10 @@ const sendNotification = async (eventData) => {
 }
 
 const isMatch = (messageAttributes = {}, userFilterPolicy = {}) => {
+  if(Array.isArray(userFilterPolicy)){
+    return userFilterPolicy.some((policy) => isMatch(messageAttributes, policy));
+  } // if you want some multiple filter here too... like age > 30 and plan basic or just age < 30;
+
   const policyKeys = Object.keys(userFilterPolicy);
 
   if(policyKeys.length === 0) return true;

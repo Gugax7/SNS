@@ -26,8 +26,9 @@ const listTopics = () => {
 
   const topicsArray = rawTopics.map(topic => {
     return {
-      ...topic,
-      subscribersMap: Object.fromEntries(topic.subscribersMap) 
+      name: topic.name,
+      arn: topic.topicArn,
+      createdAt: topic.createdAt,
     };
   });
 

@@ -57,18 +57,18 @@ async function redriveDlq() {
   
 
   const newDlq = (await Promise.all(redrivePromises))
-    .filter((message) => !message.success && message.isDead)
+    .filter((message) => !message.success && !message.isDead)
     .map((message) => message.message);
 
   const deletedPermanently = redrivePromises.length - newDlq.length;
 
   dlqDb.push(...newDlq);
 
-  return {fail: newDlq.length, success: success, deletedPermanently}
+  return {fail: newDlq.length, success: successes, deletedPermanently}
 }
 
 function listDlq() {
-  return JSON.stringify(dlqDb);
+  return dlqDb;
 }
 
 // Todo: Delete from dead letter queue from topic arn

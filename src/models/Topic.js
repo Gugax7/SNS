@@ -9,7 +9,7 @@ const mockSubscribersMap = new Map([
       username: "Alice",
       protocol: "http",
       filterPolicy: {
-        plan: ["premium", "gold"],
+        plan: ["premium", "gold", "basic"],
         age: [{"numeric": [">=", 18]}] 
       },
       maxDlqRetries: 3,
@@ -19,7 +19,7 @@ const mockSubscribersMap = new Map([
     "http://localhost:3002/webhook",
     {
       username: "Bruno",
-      protocol: "email",
+      protocol: "http",
       filterPolicy: {
         status: [{"anything-but": ["banned", "inactive"]}],
         plan: ["basic"]
@@ -31,10 +31,11 @@ const mockSubscribersMap = new Map([
     "http://localhost:3003/webhook",
     {
       username: "Carla",
-      protocol: "sms",
+      protocol: "http",
       filterPolicy: {
         event_type: [{"prefix": "order_"}],
-        age: [{"numeric": [">=", 20, "<=", 40]}] 
+        age: [{"numeric": [">=", 20, "<=", 40]}],
+        plan: ["basic"],
       },
       maxDlqRetries: 1,
     }
@@ -53,17 +54,39 @@ const mockSubscribersMap = new Map([
   ]
 ]);
 
-// 2. Agora criamos o banco de Tópicos (topicsDb), que também é um Map.
-// A chave é o topicArn, e o valor é o objeto completo do tópico.
+const systemSubscriberMap = new Map(
+  Array.from(mockSubscribersMap.entries()).map(([endpoint, clientInfo]) => {
+    const {filterPolicy, ...rest} = clientInfo;
+
+    return [
+      endpoint,
+      {
+        ...rest,
+        filterPolicy: {},
+      }
+    ]
+  })
+)
+
 const topicsDb = new Map([
   [
-    "arn:local:sns:topic:7eb0c05c-a0c4-4feb-a8ec-65801ed5d697", // CHAVE
-    {                                                           // VALOR
+    "arn:local:sns:topic:7eb0c05c-a0c4-4feb-a8ec-65801ed5d697",
+    {                                                          
       topicArn: "arn:local:sns:topic:7eb0c05c-a0c4-4feb-a8ec-65801ed5d697",
       name: "dogsTopic",
       attributes: {},
       createdAt: "2026-04-14T22:43:11.881Z",
-      subscribersMap: mockSubscribersMap // Injetamos o Map de inscritos aqui!
+      subscribersMap: mockSubscribersMap
+    }
+  ],
+  [
+    "arn:local:sns:topic:7eb0c05c-b1c4-5tjb-b9ec-34801jk5d697", 
+    {                                                         
+      topicArn: "arn:local:sns:topic:7eb0c05c-b1c4-5tjb-b9ec-34801jk5d697",
+      name: "SystemAllerts",
+      attributes: {},
+      createdAt: "2026-04-14T22:43:11.881Z",
+      subscribersMap: systemSubscriberMap
     }
   ]
 ]);

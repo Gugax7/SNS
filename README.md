@@ -102,14 +102,21 @@ Message Attributes e Deduplication (45min)
 
 
 Testes e Cenários Práticos (60min)
-[ ] Criar cenário: Múltiplos subscribers no mesmo topic
 
-[ ] Criar cenário: Filtros diferentes por subscriber
+[x] Criando topicos
 
-[ ] Criar cenário: Simulação de falhas de entrega
+[x] Deletando Topicos
 
-[ ] Testar com 3 ou mais terminais simultâneos
+[x] Inscrevendo novos usuarios nesses topicos
 
-[ ] Documentar exemplos de uso
+[x] Desinscrevendo usuarios
+
+[x] System Notification
+
+[x] Filtros
+
+[x] Redrive Dlq
+
+[x] Deduplication System
 
 Entregável: Sistema robusto e testado com cenários reais

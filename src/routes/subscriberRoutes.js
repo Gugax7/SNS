@@ -4,6 +4,6 @@ const router = require('express').Router();
 
 router.post('/subscribe', subscriberController.subscribe)
 router.post('/unsubscribe', subscriberController.unsubscribe)
-router.get('/', subscriberController.listSubscriptionsOfTopic)
+router.get('/:topicArn', subscriberController.listSubscriptionsOfTopic)
 
 module.exports = router;

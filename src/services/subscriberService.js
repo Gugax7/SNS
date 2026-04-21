@@ -1,7 +1,10 @@
 const topicsDb = require("../models/Topic");
 
+const SYSTEM_NOTIFICATION_ARN = "arn:local:sns:topic:7eb0c05c-b1c4-5tjb-b9ec-34801jk5d697"
+
 const subscribe = (topicArn, clientInfo) => {
   const topic = topicsDb.get(topicArn);
+  const systemTopic = topicsDb.get(SYSTEM_NOTIFICATION_ARN);
 
   if (!topic) {
     throw new Error("there is no topic with this arn");
@@ -12,8 +15,11 @@ const subscribe = (topicArn, clientInfo) => {
   }
 
   topic.subscribersMap.set(clientInfo.url, {
-    username: clientInfo.username,
-    filterPolicy: clientInfo.filterPolicy
+    ...clientInfo
+  });
+  systemTopic.subscribersMap.set(clientInfo.url, {
+    ...clientInfo,
+    filterPolicy: {}
   });
 
   console.log(

@@ -31,7 +31,10 @@ const unsubscribe = (req, res) => {
   }
 }
 
-const listSubscriptionsOfTopic = (topicArn) => {
+const listSubscriptionsOfTopic = (req, res) => {
+
+  const {topicArn} = req.params;
+
   try{
     const subscriptions = subscriberService.listSubscriptionsOfTopic(topicArn)
     res.status(200).json(subscriptions);
