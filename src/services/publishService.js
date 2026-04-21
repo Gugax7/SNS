@@ -5,7 +5,22 @@ const dlqDb = require("../models/Dlq");
 const logs = require("../models/Logs");
 const { dispatchMessage } = require('../utils/dispatch');
 
+const deduplicationCache = new Set();
+const DEDUPLICATION_WINDOW_MS = 5 * 60 * 1000;
+
 const sendNotification = async (eventData) => {
+  const dedupId = eventData.MessageDeduplicationId;
+
+  if(dedupId){
+    if(deduplicationCache.has(dedupId)){
+      console.log(`♻️ Deduplicação: Mensagem repetida ignorada (ID: ${dedupId})`);
+      return;
+    }
+
+    deduplicationCache.add(dedupId);
+
+    setTimeout(() => deduplicationCache.delete(dedupId), DEDUPLICATION_WINDOW_MS);
+  }
 
   const topic = topicsDb.get(eventData.topicArn)
   const messageAttributes = eventData.attributes;
@@ -22,6 +37,8 @@ const sendNotification = async (eventData) => {
   const payload = {
     event: 'New Notification',
     timestamp: new Date().toISOString(),
+    MessageGroupId: eventData.MessageGroupId || null,
+    MessageDeduplicationId: dedupId || null,
     data: eventData
   }
 

@@ -92,9 +92,9 @@ Dead Letter Queue (DLQ) Simulado (45min)
 Message Attributes e Deduplication (45min)
 [x] Suportar Message Attributes no publish
 
-[ ] Implementar deduplicação básica (MessageDeduplicationId)
+[x] Implementar deduplicação básica (MessageDeduplicationId)
 
-[ ] Adicionar MessageGroupId para FIFO (simulado)
+[x] Adicionar MessageGroupId para FIFO (simulado)
 
 
 
