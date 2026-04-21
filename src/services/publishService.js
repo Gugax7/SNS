@@ -2,36 +2,10 @@ const axios = require('axios');
 
 const topicsDb = require("../models/Topic");
 const dlqDb = require("../models/Dlq");
-
-function dispatchMessage(endpoint, protocol, payload){
-  switch(protocol) {
-    case 'http':
-    case 'https':
-      const response = axios.post(endpoint, payload);
-      
-      return response;
-
-    case 'email':
-      console.log(`📧 Simulando envio de E-MAIL para: ${endpoint}`);
-      console.log(`   Assunto: Novo Evento | Corpo: ${JSON.stringify(payload)}`);
-      
-      return true;
-    
-    case 'sms':
-      console.log(`📱 Simulando envio de SMS para: ${endpoint}`);
-      console.log(`   Mensagem: Você tem uma nova notificação!`);
-      // return await twilioClient.messages.create(...)
-      return true;
-
-    default:
-      throw new Error(`Protocolo '${protocol}' não é suportado pelo sistema.`);
-
-  }
-}
+const logs = require("../models/Logs");
+const { dispatchMessage } = require('../utils/dispatch');
 
 const sendNotification = async (eventData) => {
-
-  console.log("eventData", eventData)
 
   const topic = topicsDb.get(eventData.topicArn)
   const messageAttributes = eventData.attributes;
@@ -55,26 +29,52 @@ const sendNotification = async (eventData) => {
     console.log('Sending new notification for ', filteredSubscribers.length, ' clients');
 
     const sends = filteredSubscribers.map(async ([endpoint, clientInfo]) => {
-      try{
-        await dispatchMessage(endpoint, clientInfo.protocol, payload);
-        
-        console.log(`✅ Success -> ${endpoint} [${clientInfo.protocol}]`);
 
-      return { success: true, payload };
-      } catch (err) {
-        console.log(`❌ Fail -> ${endpoint} [${clientInfo.protocol}]. Enviando para DLQ...`);
+      const MAX_RETRIES = 2;
+      for(let attempts = 0; attempts < MAX_RETRIES; attempts++){
+        try{
+          await dispatchMessage(endpoint, clientInfo.protocol, payload);
+          
+          console.log(`✅ Success -> ${endpoint} [${clientInfo.protocol}]`);
 
-        dlqDb.push({
-                failedEndpoint: endpoint,
-                topicArn: eventData.topicArn,
-                payload,
-                protocol: clientInfo.protocol,
-                lastError: err.message,
-                failedAt: new Date().toISOString(),
-                attempts: 1
-              })
-        return { success: false, payload };
+          logs.push({
+            endpoint,
+            status: 'SUCCESS',
+            deliveredAt: new Date().toISOString()
+          })
+
+          break;
+        } 
+        catch (err) {  
+          logs.push({
+            endpoint,
+            status: 'ERROR',
+            errorDetail: err.message,
+            attemptedAt: new Date().toISOString()
+          });
+
+          if(attempts === MAX_RETRIES - 1){
+            console.log(`❌ Fail -> ${endpoint} [${clientInfo.protocol}]. Sending to DLQ...`);
+            
+            dlqDb.push({
+                  failedEndpoint: endpoint,
+                  topicArn: eventData.topicArn,
+                  payload,
+                  maxDlqAttempts: clientInfo.maxDlqRetries ?? 3,
+                  protocol: clientInfo.protocol,
+                  lastError: err.message,
+                  failedAt: new Date().toISOString(),
+                  dlqAttempts: 0
+                })
+          }
+          else{
+            console.log(`❌ Fail -> ${endpoint} [${clientInfo.protocol}]. Trying again...`);
+          
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
       }
+      
     })
 
     await Promise.all(sends);

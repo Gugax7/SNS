@@ -53,9 +53,9 @@ Sistema de Publish (60min)
 
 [x] Criar sistema de entrega de mensagens
 
-[ ] Implementar retry logic básico
+[x] Implementar retry logic básico
 
-[ ] Adicionar logging de mensagens
+[x] Adicionar logging de mensagens
 
 Subscription Filters (60min)
 [x] Implementar FilterPolicy (JSON-based)
@@ -87,10 +87,10 @@ Dead Letter Queue (DLQ) Simulado (45min)
 
 [x] Criar Endpoint para consultar DLQ
 
-[ ] Configurar max retries por subscription
+[x] Configurar max retries por subscription
 
 Message Attributes e Deduplication (45min)
-[ ] Suportar Message Attributes no publish
+[x] Suportar Message Attributes no publish
 
 [ ] Implementar deduplicação básica (MessageDeduplicationId)
 

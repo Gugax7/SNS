@@ -11,7 +11,8 @@ const mockSubscribersMap = new Map([
       filterPolicy: {
         plan: ["premium", "gold"],
         age: [{"numeric": [">=", 18]}] 
-      }
+      },
+      maxDlqRetries: 3,
     }
   ],
   [
@@ -22,7 +23,8 @@ const mockSubscribersMap = new Map([
       filterPolicy: {
         status: [{"anything-but": ["banned", "inactive"]}],
         plan: ["basic"]
-      }
+      },
+      maxDlqRetries: 0,
     }
   ],
   [
@@ -33,7 +35,8 @@ const mockSubscribersMap = new Map([
       filterPolicy: {
         event_type: [{"prefix": "order_"}],
         age: [{"numeric": [">=", 20, "<=", 40]}] 
-      }
+      },
+      maxDlqRetries: 1,
     }
   ],
   [
@@ -44,7 +47,8 @@ const mockSubscribersMap = new Map([
       filterPolicy: {
         plan: ["basic", "premium"],
         department: [{"prefix": "sales_"}]
-      }
+      },
+      maxDlqRetries: 2,
     }
   ]
 ]);
